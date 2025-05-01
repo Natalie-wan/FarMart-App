@@ -1,0 +1,79 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5vh 1rem;
+  min-height: 90vh;
+  background-color: #f7f7f7;
+}
+
+.form {
+  background: white;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.input {
+  width: 100%;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.3s;
+}
+
+.input:focus {
+  border-color: #6a5acd;
+  outline: none;
+}
+
+.button {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #6a5acd;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.button:hover {
+  background-color: #5943c3;
+}
+
+.error {
+  background: #ffe0e0;
+  color: #d33;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.redirect {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  text-align: center;
+}
+.redirect a {
+  color: #6a5acd;
+  text-decoration: none;
+  font-weight: bold;
+}
+.redirect a:hover {
+  text-decoration: underline;
+}

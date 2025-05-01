@@ -1,0 +1,50 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #295A3D; /* green from Figma */
+    padding: 1rem 2rem;
+    color: white;
+  }
+  
+  .logo a {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .navLinks {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .navLinks li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .authButtons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .login,
+  .register {
+    background-color: white;
+    color: #295A3D;
+    border: none;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login:hover,
+  .register:hover {
+    background-color: #ddd;
+  }
+  

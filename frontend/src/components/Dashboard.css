@@ -1,0 +1,51 @@
+.dashboardContainer {
+    padding: 2rem;
+    background-color: #fafafa;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .section {
+    margin-bottom: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #444;
+  }
+  
+  .activityList {
+    list-style-type: disc;
+    margin-left: 2rem;
+    color: #666;
+  }
+  
+  .recommendations {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .card {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    flex: 1 1 30%;
+    min-width: 180px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+  }
+  
