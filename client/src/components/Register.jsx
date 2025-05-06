@@ -1,117 +1,118 @@
 import React, { useState } from 'react';
-import './Register.css';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-import { useAuth } from '../contexts/AuthContext'; 
+import { useAuth } from '../contexts/AuthContext';
+import 'react-toastify/dist/ReactToastify.css'; 
+import './Register.css';
+
 
 const Register = () => {
+  const { register, isLoading } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: '',
+    role: 'buyer',
+    address: '',
   });
 
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const { setToken } = useAuth(); // ✅ Use AuthContext
+  const [passwordError, setPasswordError] = useState('');
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    try {
-      const response = await fetch('http://127.0.0.1:5000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
+    if (name === 'password') {
+      const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!passwordPattern.test(value)) {
+        setPasswordError('Password must be at least 8 characters, contain one uppercase letter and one number.');
+      } else {
+        setPasswordError('');
       }
-
-      const token = data.token;
-      setToken(token); //Store in context
-
-      const decoded = jwtDecode(token);
-      console.log('Decoded user:', decoded);
-
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.message);
     }
   };
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { name, email, password, role, address } = formData;
+  
+    if (passwordError) {
+      console.log('Password error:', passwordError);
+      return;
+    }
+  
+    try {
+      const response = await register(name, email, password, role, address);
+  
+      if (response && response.status === 'success') {
+        console.log('Registration successful!');
+        navigate('/login');
+      } else {
+        console.log('Registration failed:', response);
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+    }
+  };
+  
   return (
-    <div className="register-page">
-      <form onSubmit={handleSubmit} className="register-form">
-        <h1 className="register-heading">Register</h1>
-        {error && <div className="register-error">{error}</div>}
-
+    <div className="register-container">
+      <h2>Create Account</h2>
+      <form className="register-form" onSubmit={handleSubmit}>
         <input
           type="text"
           name="name"
-          placeholder="Name"
+          placeholder= "name"
           value={formData.name}
           onChange={handleChange}
           required
-          className="register-input"
         />
 
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder= "email"
           value={formData.email}
           onChange={handleChange}
           required
-          className="register-input"
         />
 
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder= "password"
           value={formData.password}
           onChange={handleChange}
           required
-          className="register-input"
         />
+        {passwordError && <p className="password-error">{passwordError}</p>} 
 
-        <select
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-          required
-          className="register-input register-select"
-        >
-          <option value="" disabled>
-            Register as...
-          </option>
-          <option value="farmer">Farmer</option>
+        <label>Role</label>
+        <select name="role" value={formData.role} onChange={handleChange}>
           <option value="buyer">Buyer</option>
+          <option value="farmer">Farmer</option>
         </select>
 
-        <button type="submit" className="register-btn">
-          Sign Up
-        </button>
+        {formData.role === 'buyer' && (
+          <>
+            <input
+              type="text"
+              name="address"
+              placeholder= "Buyer Address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
+          </>
+        )}
 
-        <p className="register-login-link">
-          Already have an account? <a href="/login">Login</a>
-        </p>
+        <button type="submit" disabled={isLoading || passwordError}>
+          {isLoading ? 'Registering...' : 'Register'}
+        </button>
       </form>
     </div>
   );
 };
 
 export default Register;
+
