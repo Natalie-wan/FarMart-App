@@ -1,12 +1,60 @@
-import React, { useState } from "react";
-import "./PaymentPage.css";
+import React, { useState, useEffect } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import './PaymentPage.css';
+
+const stripePromise = loadStripe("your-public-key-here"); //Add your public Stripe key here
 
 const PaymentPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const [clientSecret, setClientSecret] = useState(null); //Stores client secret
 
-  const handleSubmit = (e) => {
+  //Fetch client secret from backend
+  useEffect(() => {
+    const createPaymentIntent = async () => {
+      const response = await fetch('http://127.0.0.1:5000/create-payment-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: 5000 }) 
+      });
+      const data = await response.json();
+      setClientSecret(data.clientSecret);
+    };
+
+    createPaymentIntent();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Payment submitted with:", paymentMethod);
+
+    const stripe = useStripe();
+    const elements = useElements();
+
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded
+      return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
+    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
+        billing_details: {
+          name: 'Customer Name', 
+        },
+      },
+    });
+
+    if (error) {
+      console.log("[PaymentError]", error);
+      alert("Payment failed: " + error.message);
+    } else if (paymentIntent.status === 'succeeded') {
+      console.log("Payment successful:", paymentIntent);
+      alert("Payment successful!");
+    }
   };
 
   return (
@@ -16,24 +64,8 @@ const PaymentPage = () => {
       <form className="form" onSubmit={handleSubmit}>
         <div className="inputGroup">
           <label htmlFor="cardNumber">Card Number</label>
-          <input type="text" id="cardNumber" name="cardNumber" required />
-        </div>
-
-        <div className="inputGroup">
-          <label htmlFor="cardName">Cardholder Name</label>
-          <input type="text" id="cardName" name="cardName" required />
-        </div>
-
-        <div className="row">
-          <div className="inputGroup">
-            <label htmlFor="expiry">Expiry Date</label>
-            <input type="text" id="expiry" placeholder="MM/YY" required />
-          </div>
-
-          <div className="inputGroup">
-            <label htmlFor="cvv">CVV</label>
-            <input type="password" id="cvv" maxLength="4" required />
-          </div>
+          {/*No longer needs a manual card number input, Stripe Elements will handle this*/}
+          <CardElement id="cardNumber" />
         </div>
 
         <div className="inputGroup">
@@ -49,7 +81,7 @@ const PaymentPage = () => {
           </select>
         </div>
 
-        <button className="submitButton" type="submit">
+        <button className="submitButton" type="submit" disabled={!stripe}>
           Complete Payment
         </button>
       </form>
@@ -57,4 +89,10 @@ const PaymentPage = () => {
   );
 };
 
-export default PaymentPage;
+const StripePaymentPage = () => (
+  <Elements stripe={stripePromise}>
+    <PaymentPage />
+  </Elements>
+);
+
+export default StripePaymentPage;
