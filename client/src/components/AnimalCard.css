@@ -97,7 +97,7 @@
   color: #2c7a7b;
 }
 
-.adoptBtn {
+.addToCartBtn {
   background-color: #2c7a7b;
   color: white;
   border: none;
@@ -107,6 +107,6 @@
   transition: background-color 0.3s ease;
 }
 
-.adoptBtn:hover {
+.addToCartBtn:hover {
   background-color: #225e5e;
 }
