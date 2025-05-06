@@ -27,7 +27,7 @@ app.secret_key = os.getenv('SECRET_KEY', 'defaultsecret')
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'secret123')
 
 # Enable CORS for React frontend
-CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 # Initialize extensions
 db.init_app(app)

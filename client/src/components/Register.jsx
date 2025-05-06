@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import './Register.css';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import { useAuth } from '../contexts/AuthContext'; 
 
 const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: '', // Added role field
+    role: '',
   });
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setToken } = useAuth(); // ✅ Use AuthContext
 
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -25,10 +28,10 @@ const Register = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch('http://127.0.0.1:5000/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
@@ -37,7 +40,12 @@ const Register = () => {
         throw new Error(data.message || 'Registration failed');
       }
 
-      console.log('Registration successful:', data);
+      const token = data.token;
+      setToken(token); //Store in context
+
+      const decoded = jwtDecode(token);
+      console.log('Decoded user:', decoded);
+
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
