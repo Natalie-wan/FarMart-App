@@ -1,4 +1,4 @@
-.navbar {
+/**.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -47,4 +47,104 @@
   .register:hover {
     background-color: #ddd;
   }
-  
+*/
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3F441C; 
+  padding: 1.5rem 3rem; 
+  color: white;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.logo {
+  display: flex;
+  justify-content: flex-start;
+  flex: 1; /* Give the logo section some space */
+}
+
+.logo a {
+  color: transparent;
+  background-image: linear-gradient(45deg, #8AA7A8, #B0A374);
+  background-clip: text;
+  -webkit-background-clip: text; 
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: left; 
+}
+
+.navLinks {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex: 2;
+}
+
+.navLinks li a {
+  color: #ECE5D1; /* Light beige */
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.navLinks li a:hover {
+  color: #D68737; /* Golden color */
+  border-bottom: 2px solid #D68737; /* Underline effect on hover */
+}
+
+.navLinks li a.active {
+  color: #D68737;
+  border-bottom: 2px solid #D68737; /* Active link underline */
+}
+
+/* Cart Styling */
+.cart {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  background-color: #B0A374; /* Subtle gold */
+  border-radius: 50px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.cart:hover {
+  background-color: #D68737; /* Bright gold on hover */
+  transform: scale(1.05); /* Subtle scaling */
+}
+
+.cart i {
+  font-size: 1.2rem;
+  color: white;
+}
+
+/* Auth Buttons */
+.authButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.login,
+.register {
+  background-color: #ECE5D1; /* Light beige */
+  color: #3F441C; /* Dark Olive */
+  border: none;
+  padding: 0.5rem 1.2rem; /* Increased padding */
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.login:hover,
+.register:hover {
+  background-color: #B0A374; /* Subtle gold on hover */
+  color: white;
+  transform: scale(1.05);
+}

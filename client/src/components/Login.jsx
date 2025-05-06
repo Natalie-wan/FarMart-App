@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../services/AuthService'; 
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -10,7 +11,7 @@ const Login = () => {
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -19,25 +20,14 @@ const Login = () => {
     setError('');
 
     try {
-      // 🔗 Send login data to backend
-      // Replace URL with your login endpoint
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
+      // Use the loginUser service
+      const data = await loginUser(formData); // Call loginUser
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
-
-      // 🔑 Store token / update auth context here
+      // Handle success (for now just log and redirect)
       console.log('Login successful:', data);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError(err.message); // Handle error
     }
   };
 

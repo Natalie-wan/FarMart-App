@@ -67,7 +67,7 @@ const Marketplace = () => {
   const [filters, setFilters] = useState({ class: '', category: '' });
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/animals')
+    fetch('http://localhost:5000/animals')
       .then((res) => {
         if (!res.ok) throw new Error(`API error: ${res.statusText}`);
         return res.json();

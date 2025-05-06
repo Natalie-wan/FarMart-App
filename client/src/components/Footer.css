@@ -1,4 +1,4 @@
-.footer {
+/**.footer {
     background-color: #295A3D;
     color: white;
     padding: 3rem 2rem 2rem;
@@ -53,4 +53,63 @@
     font-size: 0.9rem;
     color: #e0e0e0;
   }
-  
+*/
+
+/* Footer */
+.footer {
+  background-color: #3F441C;
+  color: white;
+  padding: 2rem 3rem; /* Consistent with navbar */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.column {
+  flex: 1 1 200px;
+}
+
+.column h4 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.column h5 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.column ul li {
+  margin-bottom: 0.5rem;
+}
+
+.column ul li a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.column ul li a:hover {
+  color: #D68737; /* Golden Hover Effect */
+}
+
+.bottomBar {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+  color: #e0e0e0;
+}

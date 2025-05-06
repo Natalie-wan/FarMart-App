@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import './Register.css';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { useAuth } from '../contexts/AuthContext'; 
+import { useAuth } from '../contexts/AuthContext';
+import { registerUser } from '../services/AuthService'; 
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ const Register = () => {
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { setToken } = useAuth(); // ✅ Use AuthContext
+  const { setToken } = useAuth(); // Use AuthContext
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -28,27 +29,18 @@ const Register = () => {
     setError('');
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
+      // Use the registerUser service
+      const data = await registerUser(formData); // Call registerUser
 
       const token = data.token;
-      setToken(token); //Store in context
+      setToken(token); // Store in context
 
       const decoded = jwtDecode(token);
       console.log('Decoded user:', decoded);
 
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError(err.message); // Handle error
     }
   };
 
