@@ -1,70 +1,72 @@
-import React, { useState } from 'react';
-import './Login.css';
-import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../services/AuthService'; 
+import { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import './Login.css'
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, isLoading } = useAuth();
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const location = useLocation();
+  
+  const from = location.state?.from || '/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
+    
     try {
-      // Use the loginUser service
-      const data = await loginUser(formData); // Call loginUser
-
-      // Handle success (for now just log and redirect)
-      console.log('Login successful:', data);
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.message); // Handle error
+      await login(email, password);
+      navigate(from, { replace: true });
+    } catch (error) {
+      console.error('Login error:', error);
+      console.log('Login failed. Please check your credentials.');
     }
   };
-
+  
   return (
-    <div className="container">
-      <form onSubmit={handleSubmit} className="form">
-        <h2 className="title">Welcome Back</h2>
-        {error && <div className="error">{error}</div>}
-
-        <input
-          className="input"
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          className="input"
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-
-        <button className="button" type="submit">
-          Login
-        </button>
-
-        <p className="redirect">
-          Don't have an account? <a href="/register">Register</a>
-        </p>
-      </form>
+    <div className="login-container">
+      <div className="login-card">
+          <p className="registers">Sign in to your Farmart account</p>
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="input-container">
+            <input
+              id="email"
+              type="email"
+              placeholder="your.email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          
+          <div className="input-container">
+            <input
+              id="password"
+              type="password"
+              placeholder="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          
+          <button 
+            type="submit" 
+            className="submit-button" 
+            disabled={isLoading}
+          >
+            {isLoading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+        
+        <div className="register-link">
+          <p className="registers">
+            Don't have an account?{' '}
+            <Link to="/register" className="link">Register here</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

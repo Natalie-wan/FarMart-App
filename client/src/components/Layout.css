@@ -26,32 +26,32 @@ footer {
 */
 
 /* Layout */
-/**.wrapper {
+.wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: #f9f9f9;
-  width: 100%; /* Ensure full width 
-  margin: 0; /* Remove any margin 
-  padding: 0; /* Remove any padding 
-}*/
+  width: 100%; /* Ensure full width */
+  margin: 0; /* Remove any margin */
+  padding: 0; /* Remove any padding */
+}
 
 .content {
   flex: 1;
-  padding: 0; /* Remove padding to allow full-width content */
+  padding: 0; 
   background-color: #fff;
   width: 100%;
 }
 
 header {
   padding: 1rem;
-  background-color: #3F441C; /* Dark Olive Green */
+  background-color: #3F441C; 
   color: white;
 }
 
 footer {
   padding: 0.5rem;
-  background-color: #3F441C; /* Dark Olive Green */
+  background-color: #3F441C; 
   color: white;
   text-align: center;
 }

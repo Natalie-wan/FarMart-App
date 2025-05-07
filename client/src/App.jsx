@@ -54,13 +54,13 @@ import Dashboard from "./components/Dashboard";
 import Checkout from "./components/Checkout";
 import Cart from "./components/Cart";
 import PaymentPage from "./components/PaymentPage";
-import { CartProvider } from "./contexts/CartContext"; // ✅ Import your CartContext
+import { CartProvider } from "./contexts/CartContext"; 
 
 import "./App.css";
 
 function App() {
   return (
-    <CartProvider> {/* ✅ Wrap your app in CartProvider */}
+    <CartProvider> 
       <Router>
         <div className="min-h-screen flex flex-col font-sans">
           <Navbar />
