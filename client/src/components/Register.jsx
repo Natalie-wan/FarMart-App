@@ -56,17 +56,11 @@ const Register = () => {
   };
   
   return (
-<<<<<<< HEAD
-    <div className="register-container">
-      <h2>Create Account</h2>
-      <form className="register-form" onSubmit={handleSubmit}>
-=======
     <div>
        <div className="register-container">
       <div className="register-card">
        <h2>Create Account</h2>
        <form className="register-form" onSubmit={handleSubmit}>
->>>>>>> 23a97a17cd2ffcb2856905caa1195fd5fd139297
         <input
           type="text"
           name="name"
@@ -124,9 +118,5 @@ const Register = () => {
   );
 };
 
-<<<<<<< HEAD
-export default Register;
-=======
 export default Register;
 
->>>>>>> 23a97a17cd2ffcb2856905caa1195fd5fd139297
