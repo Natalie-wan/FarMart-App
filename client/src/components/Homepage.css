@@ -1,121 +1,62 @@
-  .homepage-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 3rem 1rem;
-    background-color: #f3f4f6;
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-  }
-  
-  
-  .hero-section {
-    background: linear-gradient(to right, #fefefe, #e5eaff);
-    border-radius: 1.5rem;
-    padding: 3rem 2rem;
-    text-align: center;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-    animation: fadeIn 0.4s ease-in;
-  }
-  
-  .hero-title {
-    font-size: 2.75rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 1rem;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.25rem;
-    color: #555;
-    margin-bottom: 2rem;
-  }
-  
-  .hero-button {
-    padding: 0.9rem 2rem;
-    font-size: 1rem;
-    background-color: #6a5acd;
-    color: #fff;
-    border: none;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
-  
-  .hero-button:hover {
-    background-color: #5a45c0;
-    transform: translateY(-2px);
-  }
-  
-  .category-section {
-    text-align: center;
-  }
-  
-  .section-title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: #333;
-    font-weight: 700;
-  }
-  
-  .category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 2rem;
-  }
-  
-  .category-card {
-    background-color: #fff;
-    padding: 1.5rem 1rem;
-    border-radius: 1rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-align: center;
-  }
-  
-  .category-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-  }
-  
-  .category-image {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 0.75rem;
-    margin-bottom: 1rem;
-  }
-  
-  .category-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .loading-text {
-    font-size: 1rem;
-    color: #777;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .hero-title {
-      font-size: 2rem;
-    }
-    .section-title {
-      font-size: 1.5rem;
-    }
-  }
-  
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.homepage-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  padding-top:400px;
+  margin-left: -50px;
+  margin-right: -50px;
+  margin-bottom: 100px;
+  background-color: #ffffff;
+  background-image: url('https://i.imgur.com/IBAaL1O.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+}
+
+
+.advertising-section {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.ad-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 40px;
+  width: 380px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  margin-bottom: -280px;
+}
+
+.ad-card:hover {
+  transform: translateY(-8px);
+}
+
+.ad-title {
+  font-size: 2rem;
+  color: #2a9d8f;
+  margin-bottom: 16px;
+}
+
+.ad-description {
+  font-size: 1rem;
+  color: rgb(0,64,128);
+  font-weight: 600;
+}

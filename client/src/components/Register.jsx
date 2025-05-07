@@ -56,9 +56,11 @@ const Register = () => {
   };
   
   return (
-    <div className="register-container">
-      <h2>Create Account</h2>
-      <form className="register-form" onSubmit={handleSubmit}>
+    <div>
+       <div className="register-container">
+      <div className="register-card">
+       <h2>Create Account</h2>
+       <form className="register-form" onSubmit={handleSubmit}>
         <input
           type="text"
           name="name"
@@ -110,6 +112,8 @@ const Register = () => {
           {isLoading ? 'Registering...' : 'Register'}
         </button>
       </form>
+    </div>
+    </div>
     </div>
   );
 };
