@@ -1,106 +1,122 @@
-/**import React, { useEffect, useState } from 'react';
-import './AnimalDetail.css';
-import { useParams } from 'react-router-dom';
-
-const AnimalDetail = () => {
-  const { id } = useParams();
-  const [animal, setAnimal] = useState(null);
-
-  useEffect(() => {
-    // 🔗 Fetch animal details from backend
-    // Replace the URL with your backend endpoint
-    fetch(`/api/animals/${id}`)
-      .then((res) => res.json())
-      .then((data) => setAnimal(data))
-      .catch((err) => console.error('Error fetching animal:', err));
-  }, [id]);
-
-  if (!animal) return <div className="loading">Loading...</div>;
-
-  return (
-    <div className="detailContainer">
-      <div className="imageWrapper">
-        <img
-          src={animal.imageUrl || '/placeholder.png'}
-          alt={animal.name}
-          className="image"
-        />
-      </div>
-      <div className="infoWrapper">
-        <h2 className="name">{animal.name}</h2>
-        <p className="breed"><strong>Breed:</strong> {animal.breed}</p>
-        <p className="age"><strong>Age:</strong> {animal.age} years</p>
-        <p className="description">{animal.description}</p>
-        <p className="price"><strong>Price:</strong> ${animal.price}</p>
-        <p className="status">
-          <strong>Status:</strong>{' '}
-          <span className={animal.available ? "available" : "unavailable"}>
-            {animal.available ? 'Available' : 'Adopted'}
-          </span>
-        </p>
-        <button className="adoptBtn" disabled={!animal.available}>
-          {animal.available ? 'Adopt Me' : 'Not Available'}
-        </button>
-      </div>
-    </div>
-  );
-};
-
-export default AnimalDetail;
-*/
-
-import React, { useEffect, useState } from 'react';
-import './AnimalDetail.css';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import config from '../config';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './AnimalDetail.css';
 
 const AnimalDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { addItem } = useCart();
+
   const [animal, setAnimal] = useState(null);
-  const { addToCart } = useCart();
+  const [loading, setLoading] = useState(true);
+
+  const isTokenExpired = (token) => {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expiryTime = payload.exp * 1000;
+    return Date.now() > expiryTime;
+  };
 
   useEffect(() => {
-    fetch(`/api/animals/${id}`)
-      .then((res) => res.json())
-      .then((data) => setAnimal(data))
-      .catch((err) => console.error('Error fetching animal:', err));
-  }, [id]);
+    const fetchAnimal = async () => {
+      setLoading(true);
 
-  if (!animal) return <div className="loading">Loading...</div>;
+      const stored = localStorage.getItem('farmartUser');
+      if (!stored) {
+        toast.error('Not authenticated');
+        setLoading(false);
+        return;
+      }
+
+      const { token } = JSON.parse(stored);
+
+      // Check if the token has expired
+      if (isTokenExpired(token)) {
+        toast.error('Session expired, please log in again');
+        setLoading(false);
+        navigate('/login'); // Redirect to login page
+        return;
+      }
+
+      try {
+        const res = await fetch(`${config.API_BASE_URL}/animals/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.status === 404) {
+          toast.error('Animal not found');
+          setAnimal(null);
+        } else if (res.status === 401) {
+          toast.error('Unauthorized access, please log in again');
+          setAnimal(null);
+          navigate('/login'); // Redirect to login page
+        } else if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(errText || res.statusText);
+        } else {
+          const data = await res.json();
+          setAnimal(data);
+        }
+      } catch (err) {
+        console.error('[AnimalDetail] Error:', err);
+        toast.error(err.message || 'Failed to fetch animal');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnimal();
+  }, [id, navigate]);
+
+  if (loading) return <div className="loading">Loading...</div>;
+  if (!animal) return <div className="error">Animal not found</div>;
 
   return (
-    <div className="detailContainer">
-      <div className="imageWrapper">
-        <img
-          src={animal.imageUrl || '/placeholder.png'}
-          alt={animal.name}
-          className="image"
-        />
-      </div>
+    <div className="animal-detail">
+      <div className="animal-card">
+        <div className="image-container">
+          <img
+            src={animal.image || '/default-animal.jpg'}
+            alt={animal.name || `${animal.type} - ${animal.breed}`}
+            className="animal-image"
+          />
+        </div>
 
-      <div className="infoWrapper">
-        <h2 className="name">{animal.name}</h2>
-        <p className="breed"><strong>Breed:</strong> {animal.breed}</p>
-        <p className="age"><strong>Age:</strong> {animal.age} years</p>
-        <p className="description">{animal.description}</p>
-        <p className="price"><strong>Price:</strong> ${animal.price}</p>
-        <p className="status">
-          <strong>Status:</strong>{' '}
-          <span className={animal.available ? "available" : "unavailable"}>
-            {animal.available ? 'In Stock' : 'Out of Stock'}
-          </span>
-        </p>
+        <div className="animal-info">
+          <div className="header">
+            <h3 className="animal-name">
+              {animal.name || `${animal.type} - ${animal.breed}`}
+            </h3>
+          </div>
+          <p className="animal-breed">Breed: {animal.breed}</p>
+          <p className="animal-age">Age: {animal.age} years</p>
+          <div className="animal-price">
+            <p>${animal.price?.toLocaleString()}</p>
+          </div>
 
-        <button
-          className="addToCartBtn"
-          disabled={!animal.available}
-          onClick={() => addToCart(animal)}
-        >
-          {animal.available ? 'Add to Cart' : 'Not Available'}
-        </button>
+          <div className="add-to-cart">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                addItem(animal);
+                toast.success('Added to cart');
+              }}
+              className="add-button"
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default AnimalDetail;
+
+

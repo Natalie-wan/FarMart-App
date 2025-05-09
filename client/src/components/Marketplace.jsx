@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AnimalCard from './AnimalCard';
 import FilterSideBar from './FilterSideBar';
-import './Marketplace.css';
 
 const Marketplace = () => {
   const [animals, setAnimals] = useState([]);
@@ -47,7 +46,6 @@ const Marketplace = () => {
           ))
         ) : (
           <div className="noAnimals">
-            No animals found matching your criteria
           </div>
         )}
       </div>

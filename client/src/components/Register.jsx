@@ -4,7 +4,6 @@ import { useAuth } from '../contexts/AuthContext';
 import 'react-toastify/dist/ReactToastify.css'; 
 import './Register.css';
 
-
 const Register = () => {
   const { register, isLoading } = useAuth();
   const navigate = useNavigate();

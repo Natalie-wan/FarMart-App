@@ -1,58 +1,155 @@
-.sidebar {
-  width: 100%;
-  max-width: 280px;
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 1.25rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  font-family: 'Inter', sans-serif;
-  position: sticky;
-  top: 2rem;
+.filter-sidebar {
+  padding: 16px;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
 }
 
+.form-group {
+  margin-bottom: 12px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filter-button {
+  width: 100%;
+  padding: 12px;
+  background-color: rgb(0, 64, 128);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
 .title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 1.25rem;
-  color: #2d3748;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
 }
 
-.section {
-  margin-bottom: 1.5rem;
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.label {
-  display: block;
-  font-weight: 600;
-  color: #4a5568;
-  margin-bottom: 0.5rem;
+.search-bar input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
-.input {
-  width: 100%;
-  padding: 0.6rem 0.75rem;
-  font-size: 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
-  outline: none;
+.search-bar button {
+  background-color: rgb(0, 64, 128);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.input:focus {
-  border-color: #2c7a7b;
-  box-shadow: 0 0 0 2px rgba(44, 122, 123, 0.2);
+.animal-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
 }
 
-.checkboxGroup {
+.animal-card {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
 }
 
-.checkboxLabel {
+.animal-card img {
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 1/1;
+  object-fit: contain;
+  background-color: #f8f8f8;
+  padding: 8px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.animal-info {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.animal-type {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.animal-breed-age {
+  font-size: 0.875rem;
+  color: #4a4a4a;
+}
+
+.animal-price {
+  font-weight: bold;
+  color: red;
   font-size: 0.95rem;
-  color: #2d3748;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  margin-top: 6px;
+}
+
+.view-details {
+  margin-top: 12px;
+  padding: 10px 30px;
+  background-color: rgb(0, 64, 128);
+  width: 100%;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
   cursor: pointer;
+  color: white;
+}
+.info-cards {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.info-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 40px;
+  width: 380px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  margin-bottom: 40px;
+}
+
+.info-card h4 {
+  font-size: medium;
+  color: #2a9d8f;
+  margin-bottom: 0.75rem;
+}
+
+.info-card p {
+  font-size: 1rem;
+  color: rgb(0, 64, 128);
+  margin: 0;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
 }

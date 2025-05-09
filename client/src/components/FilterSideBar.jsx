@@ -1,83 +1,149 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import config from '../config';
+import 'react-toastify/dist/ReactToastify.css';
 import './FilterSideBar.css';
 
-const FilterSideBar = ({ breeds, onFilterChange }) => {
-  const [selectedBreeds, setSelectedBreeds] = useState([]);
-  const [availableOnly, setAvailableOnly] = useState(false);
-  const [searchText, setSearchText] = useState('');
+const FilterSideBar = ({ onApplyFilters }) => {
+  const [filters, setFilters] = useState({
+    type: '',
+    breed: '',
+    age: '',
+  });
 
-  const handleBreedChange = (breed) => {
-    const updated = selectedBreeds.includes(breed)
-      ? selectedBreeds.filter((b) => b !== breed)
-      : [...selectedBreeds, breed];
+  const [results, setResults] = useState([]);
 
-    setSelectedBreeds(updated);
-    onFilterChange({ breeds: updated, availableOnly, searchText });
+  const handleChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleAvailabilityToggle = () => {
-    const updated = !availableOnly;
-    setAvailableOnly(updated);
-    onFilterChange({ breeds: selectedBreeds, availableOnly: updated, searchText });
-  };
+  const handleApplyFilters = () => {
+    const stored = localStorage.getItem('farmartUser');
+    if (!stored) {
+      toast.error('Not authenticated');
+      return;
+    }
 
-  const handleSearchChange = (e) => {
-    const updated = e.target.value;
-    setSearchText(updated);
-    onFilterChange({ breeds: selectedBreeds, availableOnly, searchText: updated });
-  };
+    const { token } = JSON.parse(stored);
+    const params = new URLSearchParams();
+    if (filters.breed) params.append('breed', filters.breed);
+    if (filters.type) params.append('type', filters.type);
+    if (filters.age) params.append('age', filters.age);
 
-  // Safe default for breeds if not passed as a prop
-  const safeBreeds = Array.isArray(breeds) ? breeds : [];
+    fetch(`${config.API_BASE_URL}/animals?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!Array.isArray(data) || data.length === 0) {
+          toast.error('No animals found');
+          return;
+        }
+
+        const animalsWithDetails = data.map((animal) => ({
+          id: animal.id,
+          type: animal.type,
+          breed: animal.breed,
+          age: animal.age,
+          price: animal.price,
+          image: animal.image || 'https://via.placeholder.com/80',
+          farmer_name: animal.farmer_name
+        }));
+
+        setResults(animalsWithDetails);
+        toast.success('Filters applied successfully');
+      })
+      .catch((err) => {
+        console.error('[FilterSidebar] Error:', err);
+        toast.error(err.message || 'Failed to fetch animals');
+      });
+  };
 
   return (
-    <div className="sidebar">
-      <h2 className="title">Filters</h2>
-
-      <div className="section">
-        <label className="label">Search</label>
+    <div className="filter-sidebar">
+      <div className="info-cards">
+    <div className="info-card">
+      <h4>Search by Type</h4>
+    <p>Use the type field to narrow results to specific animal categories like heifer, bullock, or buck.</p>
+     </div>
+     <div className="info-card">
+        <h4>Refine by Breed & Age</h4>
+        <p>Enter a breed or age to filter animals that meet your preferred specifications more precisely.</p>
+        </div>
+      </div>
+      <div className="form-group">
+        <label>Type:</label>
         <input
           type="text"
-          placeholder="Search by name..."
-          className="input"
-          value={searchText}
-          onChange={handleSearchChange}
+          name="type"
+          value={filters.type}
+          onChange={handleChange}
+          placeholder="e.g. heifer,bullock,ram"
+          className="input-field"
         />
       </div>
 
-      <div className="section">
-        <label className="label">Breeds</label>
-        <div className="checkboxGroup">
-          {/* Only map if breeds array is available */}
-          {safeBreeds.length > 0 ? (
-            safeBreeds.map((breed) => (
-              <label key={breed} className="checkboxLabel">
-                <input
-                  type="checkbox"
-                  checked={selectedBreeds.includes(breed)}
-                  onChange={() => handleBreedChange(breed)}
-                />
-                {breed}
-              </label>
-            ))
-          ) : (
-            <div>No breeds available</div>  // Fallback message in case breeds are empty or undefined
-          )}
-        </div>
+      <div className="form-group">
+        <label>Breed:</label>
+        <input
+          type="text"
+          name="breed"
+          value={filters.breed}
+          onChange={handleChange}
+          placeholder="e.g. suffolk,alpine"
+          className="input-field"
+        />
       </div>
 
-      <div className="section">
-        <label className="checkboxLabel">
-          <input
-            type="checkbox"
-            checked={availableOnly}
-            onChange={handleAvailabilityToggle}
-          />
-          Show Available Only
-        </label>
+      <div className="form-group">
+        <label>Age:</label>
+        <input
+          type="number"
+          name="age"
+          value={filters.age}
+          onChange={handleChange}
+          className="input-field"
+        />
       </div>
+
+      <button onClick={handleApplyFilters} className="filter-button">
+        Apply Filters
+      </button>
+
+      {results.length > 0 && (
+        <div className="animal-results">
+          {results.map((animal) => (
+            <div key={animal.id} className="animal-card">
+              <img src={animal.image} alt={animal.type} className="animal-image" />
+              <div className="animal-info">
+                <div className="animal-type">{animal.type}</div>
+                <div className="animal-breed-age">
+                  Breed: {animal.breed} • Age: {animal.age}
+                  <p>Farmer: {animal.farmer_name}</p>
+                </div>
+                <div className="animal-price">${animal.price.toLocaleString()}</div>
+              </div>
+              
+              <Link to={`/animals/${animal.id}`} className="view-details">
+                <p className="details-button">View Details</p>
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-export default FilterSideBar;
+export default FilterSideBar;  
+
+
+
+
+
