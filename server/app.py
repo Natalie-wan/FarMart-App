@@ -11,25 +11,21 @@ import stripe
 import json
 load_dotenv()
 
-# Initialize Stripe
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 endpoint_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
 
-# Initialize Flask App
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///farmart.db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:farm254@localhost/farmartdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:farm254@localhost/farmartdb'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///farmart.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.secret_key = os.getenv('SECRET_KEY', 'defaultsecret')
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'secret123')
 
-# Enable CORS for React frontend
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
-# Initialize extensions
 db.init_app(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
@@ -48,10 +44,6 @@ class Register(Resource):
         if not all([email, password, role, name]):
             return {"error": "Missing fields"}, 400
 
-        # Remove this block:
-        # if role == 'buyer' and not address:
-        #     return {"error": "Address is required for buyers"}, 400
-
         if User.query.filter_by(email=email).first():
             return {"error": "Email already exists"}, 409
 
@@ -60,7 +52,7 @@ class Register(Resource):
             password_hash=generate_password_hash(password),
             role=role,
             name=name,
-            address=address if role == 'farmer' else None  # Keep address only for farmers if needed
+            address=address if role == 'farmer' else None  
         )
         db.session.add(user)
         db.session.commit()
@@ -82,25 +74,23 @@ class Login(Resource):
 class AnimalList(Resource):
     @jwt_required()
     def get(self):
-        # Retrieve query parameters
+
         type_filter = request.args.get('type')
         breed_filter = request.args.get('breed')
         age_filter = request.args.get('age')
 
         animals = Animal.query
         
-        # Apply filters if provided
         if type_filter:
-            animals = animals.filter(Animal.type.ilike(f'%{type_filter}%'))  # Use 'ilike' for case-insensitive partial matching
+            animals = animals.filter(Animal.type.ilike(f'%{type_filter}%'))  
         if breed_filter:
-            animals = animals.filter(Animal.breed.ilike(f'%{breed_filter}%'))  # Same here for breed
+            animals = animals.filter(Animal.breed.ilike(f'%{breed_filter}%'))  
         if age_filter:
             try:
-                animals = animals.filter(Animal.age == int(age_filter))  # Convert age_filter to integer
+                animals = animals.filter(Animal.age == int(age_filter))  
             except ValueError:
-                return {'message': 'Invalid age value.'}, 400  # Handle invalid age filter
+                return {'message': 'Invalid age value.'}, 400  
 
-        # Serialize and add farmer name
         result = []
         for animal in animals.all():
             a = animal.to_dict()
@@ -171,7 +161,7 @@ class OrderList(Resource):
         user = User.query.get(user_id)
 
         if user.role == 'farmer':
-            # Get orders where any of the farmer's animals were included
+
             orders = (
                 db.session.query(Order)
                 .join(OrderItem)
@@ -181,10 +171,9 @@ class OrderList(Resource):
                 .all()
             )
         else:
-            # Buyer: get only their orders
+
             orders = Order.query.filter_by(user_id=user.id).all()
 
-        # Return detailed nested data
         order_data = []
         for order in orders:
             order_dict = order.to_dict()
@@ -206,6 +195,10 @@ class OrderList(Resource):
                 }
                 for item in order.order_items
             ]
+
+            order_dict['buyer'] = {
+                'name': order.user.name if order.user else None,
+             }
             order_data.append(order_dict)
 
         return order_data, 200
@@ -227,9 +220,9 @@ class OrderList(Resource):
         if total_price is None:
             return {"error": "Total price is required"}, 400
 
-        order = Order(user_id=user.id, total_price=total_price)  # status defaults to 'pending'
+        order = Order(user_id=user.id, total_price=total_price)  
         db.session.add(order)
-        db.session.flush()  # so we can use order.id for items
+        db.session.flush()  
 
         for item in items:
             animal_id = item.get('animal_id')
@@ -291,7 +284,6 @@ class OrderAction(Resource):
             if order.status == 'pending':
                 order.status = 'confirmed' if action == 'confirm' else 'rejected'
             elif order.status in ['confirmed', 'rejected']:
-                # Allow switching between confirmed <-> rejected
                 order.status = 'rejected' if order.status == 'confirmed' else 'confirmed'
 
         elif action in ['pending', 'confirmed', 'rejected']:
@@ -318,8 +310,7 @@ class Checkout(Resource):
 
         if not animal_ids:
             return {"error": "No animals to purchase"}, 400
-
-        # Validate that each animal belongs to a confirmed and unpaid order
+        
         for animal_id in animal_ids:
             item = OrderItem.query.join(Order).filter(
                 Order.user_id == user_id,
@@ -330,7 +321,6 @@ class Checkout(Resource):
             if not item:
                 return {"error": f"Animal {animal_id} is not in a confirmed and unpaid order"}, 400
 
-        # Get the order associated with this user and items
         order = Order.query.filter_by(user_id=user_id, status='confirmed', paid=False).first()
         if not order:
             return {"error": "Confirmed and unpaid order not found"}, 404
@@ -352,7 +342,6 @@ class Checkout(Resource):
                 'quantity': 1,
             })
 
-        # Create Stripe checkout session with order_id in metadata
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=line_items,
@@ -362,7 +351,7 @@ class Checkout(Resource):
             metadata={
                 'user_id': str(user_id),
                 'animal_ids': ','.join(map(str, animal_ids)),
-                'order_id': str(order.id)  # Pass the order ID to metadata
+                'order_id': str(order.id)  
             }
         )
 
@@ -387,15 +376,12 @@ def stripe_webhook():
         print("Checkout session completed:")
         print(json.dumps(session, indent=2))
 
-        # Retrieve the order ID stored in the session metadata (ensure you store the order ID during checkout creation)
         order_id = session.get("metadata", {}).get("order_id")
 
         if order_id:
-            # Find the order by its ID
             order = Order.query.get(order_id)
 
             if order:
-                # Update the 'paid' status of the order to True
                 order.paid = True
                 db.session.commit()
                 print(f" Order {order_id} marked as paid.")
