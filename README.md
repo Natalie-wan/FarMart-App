@@ -28,14 +28,14 @@ FarMart provides a direct, trusted digital marketplace where:
 
 ### Frontend
 - **ReactJS** – UI component library
-- **Redux Toolkit** – Application state management
+- **useContext react hook** – Application state management
 - **React Router** – Navigation and routing
-- **TailwindCSS** – Styling framework
-- **Axios** – HTTP client for API requests
+- **CSS files** – For styling
+- **Fetch** – HTTP client for API requests
 
 ### Testing
-- **Jest** – Frontend unit testing
-- **Minitests** – Backend testing
+- **Vitest** – Frontend unit testing
+- **Pytest** – Backend testing
 
 ---
 
