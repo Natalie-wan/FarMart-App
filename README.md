@@ -20,9 +20,10 @@ FarMart provides a direct, trusted digital marketplace where:
 ## Tech Stack
 
 ### Backend
-- **Python (Flask)** – RESTful API server
+- **Python (Flask)** – RESTful API server(With Flask-Restful for API handling)
+- **Flask-Migrate** - Creating and applying migrations
 - **PostgreSQL** – Relational database
-- **SQLAlchemy** – ORM for database interaction
+- **Flask-SQLAlchemy** – ORM for database interaction
 - **Flask-JWT-Extended** – User authentication
 - **Stripe** – Payment processing integration
 
