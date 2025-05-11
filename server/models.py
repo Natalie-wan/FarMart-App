@@ -29,7 +29,7 @@ class Animal(db.Model, SerializerMixin):
     breed = db.Column(db.String, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    image = db.Column(db.String, nullable=True)  # Image field for animal
+    image = db.Column(db.String, nullable=True)  
 
     farmer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     farmer = db.relationship('User', back_populates='animals')
@@ -41,10 +41,10 @@ class Order(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    status = db.Column(db.String, default='pending')  # pending, confirmed, rejected
+    status = db.Column(db.String, default='pending')  
     paid = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    total_price = db.Column(db.Float, nullable=False)  # Total price of the entire order (must be provided by frontend)
+    total_price = db.Column(db.Float, nullable=False)  
 
     user = db.relationship('User', back_populates='orders')
     order_items = db.relationship('OrderItem', back_populates='order', cascade='all, delete-orphan')
@@ -57,8 +57,8 @@ class OrderItem(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
     animal_id = db.Column(db.Integer, db.ForeignKey('animals.id'), nullable=False)
-    quantity = db.Column(db.Integer, default=1)  # Quantity of same animal
-    price = db.Column(db.Float, nullable=False)  # Price at time of order
+    quantity = db.Column(db.Integer, default=1)  
+    price = db.Column(db.Float, nullable=False) 
 
     order = db.relationship('Order', back_populates='order_items')
     animal = db.relationship('Animal')

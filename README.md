@@ -20,22 +20,23 @@ FarMart provides a direct, trusted digital marketplace where:
 ## Tech Stack
 
 ### Backend
-- **Python (Flask)** – RESTful API server
+- **Python (Flask)** – RESTful API server(With Flask-Restful for API handling)
+- **Flask-Migrate** - Creating and applying migrations
 - **PostgreSQL** – Relational database
-- **SQLAlchemy** – ORM for database interaction
+- **Flask-SQLAlchemy** – ORM for database interaction
 - **Flask-JWT-Extended** – User authentication
 - **Stripe** – Payment processing integration
 
 ### Frontend
 - **ReactJS** – UI component library
-- **Redux Toolkit** – Application state management
+- **useContext react hook** – Application state management
 - **React Router** – Navigation and routing
-- **TailwindCSS** – Styling framework
-- **Axios** – HTTP client for API requests
+- **CSS files** – For styling
+- **Fetch** – HTTP client for API requests
 
 ### Testing
-- **Jest** – Frontend unit testing
-- **Minitests** – Backend testing
+- **Vitest** – Frontend unit testing
+- **Pytest** – Backend testing
 
 ---
 
@@ -169,13 +170,13 @@ npm run dev
 
 ### Farmer Workflow
 1. Register/Login
-2. Add livestock to inventory
+2. Add livestock to inventory,edit and delete livestock when necessary
 3. View and manage orders
 4. Confirm or reject orders
 
 ### Buyer Workflow
 1. Register/Login
-2. Browse and search listings
+2. Browse and search listings by type,breed,age
 3. Add animals to cart
 4. Checkout and make payments
 5. Track orders
@@ -210,5 +211,3 @@ This project is licensed under the MIT License.
 
 
 ---
-
-© 2025 FarMart. All rights reserved.
