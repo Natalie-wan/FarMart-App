@@ -16,7 +16,8 @@ endpoint_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:farm254@localhost/farmartdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:farm254@localhost/farmartdb'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///farmart.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
