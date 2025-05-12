@@ -25,7 +25,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv('SECRET_KEY', 'defaultsecret')
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'secret123')
 
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+#CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "https://farmart-app-1d2e.onrender.com"}})
 
 db.init_app(app)
 migrate = Migrate(app, db)
